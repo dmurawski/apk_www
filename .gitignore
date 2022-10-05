@@ -7,6 +7,9 @@ io7gr1/asgi.py
 __pycache__
 db.sqlite3
 media
+__pycache__/
+local_settings.py
+
 
 # Backup files #
 *.bak
