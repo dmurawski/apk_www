@@ -9,7 +9,7 @@ db.sqlite3
 media
 __pycache__/
 local_settings.py
-
+.io7gr1/settings.py
 
 # Backup files #
 *.bak
