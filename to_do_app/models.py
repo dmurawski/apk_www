@@ -12,3 +12,4 @@ class Task(models.Model):
     taskName = models.CharField(max_length=200)
     taskDescription = models.CharField(max_length=200)
     order = models.IntegerField(default=0)
+    test = models.IntegerField(default=0)
