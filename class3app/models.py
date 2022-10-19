@@ -24,6 +24,8 @@ class Osoba(models.Model):
     def __str__(self):
         return self.imie+" "+self.nazwisko
 
+    class Meta:
+        ordering = ["nazwisko"]
 
 
 
