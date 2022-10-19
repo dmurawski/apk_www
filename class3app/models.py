@@ -18,5 +18,7 @@ class Osoba(models.Model):
         ('XI','listopad'),
         ('XII','grudzień'),
     )
-    miesiac_urodzenia = models.CharField(max_length=4, choices=MONTHS)
+    miesiac_urodzenia = models.CharField(max_length=4, choices=MONTHS, default=MONTHS[0])
+
+
 
