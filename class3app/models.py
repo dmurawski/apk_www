@@ -5,7 +5,7 @@ class Druzyna(models.Model):
     nazwa = models.CharField(max_length=40)
     kraj = models.CharField(max_length=2, blank=True, null=True)
     def __str__(self):
-        return self.nazwa+" "+self.kraj
+        return self.nazwa+" "+"("+self.kraj+")"
 
 
 class Osoba(models.Model):
