@@ -4,14 +4,28 @@ import datetime
 
 
 class OsobaSerializer(serializers.Serializer):
+    def validate_imie(self, value):
+        if not value.isalpha():
+            raise serializers.ValidationError(
+                "Imie powinno zawierać tylko litery",
+            )
+        return value
+    def validate_data_dodania(self, value):
+        if value > datetime.date.today():
+            raise serializers.ValidationError(
+                "Data nie może być z przyszłości",
+            )
+        return value
+
     id = serializers.IntegerField(read_only=True)
-    imie = serializers.CharField(required=True)
+    imie = serializers.CharField(required=True,validators=[validate_imie])
     nazwisko = serializers.CharField(required=True)
     miesiac_urodzenia = serializers.ChoiceField(choices=Months, default=Months.LUTY)
-    data_dodania = serializers.DateField(initial=datetime.date.today)
+    data_dodania = serializers.DateField(initial=datetime.date.today,validators=[validate_data_dodania])
     druzyna = serializers.PrimaryKeyRelatedField(queryset=Druzyna.objects.all(),allow_null=True)
 
     # przesłonięcie metody create() z klasy serializers.Serializer
+
     def create(self, validated_data):
         return Osoba.objects.create(**validated_data)
 
