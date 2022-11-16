@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
 # Create your models here.
 class Druzyna(models.Model):
     nazwa = models.CharField(max_length=40)
@@ -26,9 +27,12 @@ class Osoba(models.Model):
     miesiac_urodzenia = models.CharField(max_length=4,choices=Months.choices, default=Months.LUTY)
     data_dodania = models.DateField(auto_now=True)
     druzyna = models.ForeignKey(Druzyna, on_delete=models.SET_NULL,null=True,verbose_name="Drużyna")
+    owner = models.ForeignKey('auth.User', null=True, on_delete=models.CASCADE)
+
 
     def __str__(self):
         return self.imie+" "+self.nazwisko
+
 
     class Meta:
         ordering = ["nazwisko"]
