@@ -16,7 +16,7 @@ class osoba_list(APIView):
             osoby = Osoba.objects.filter(imie__icontains=request.query_params.get('imie'))
         else:
             osoby = Osoba.objects.all()
-        serializer = OsobaSerializer(osoby, many=True)
+        serializer = OsobaSerializer(osoby.filter(owner=request.user), many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):

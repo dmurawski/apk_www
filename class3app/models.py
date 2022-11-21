@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import ForeignKey
 from django.utils.translation import gettext_lazy as _
 from rest_framework.authtoken.models import Token
 from django.conf import settings
@@ -35,7 +36,7 @@ class Osoba(models.Model):
     miesiac_urodzenia = models.CharField(max_length=4,choices=Months.choices, default=Months.LUTY)
     data_dodania = models.DateField(auto_now=True)
     druzyna = models.ForeignKey(Druzyna, on_delete=models.SET_NULL,null=True,verbose_name="Drużyna")
-    owner = models.ForeignKey('auth.User', null=True, on_delete=models.CASCADE)
+    owner: ForeignKey = models.ForeignKey('auth.User', null=True, on_delete=models.CASCADE)
 
 
     def __str__(self):
