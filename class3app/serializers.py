@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from rest_framework.authtoken.admin import User
+
 from .models import Osoba, Druzyna, Months
 import datetime
 
@@ -54,3 +56,10 @@ class DruzynaSerializer(serializers.Serializer):
         instance.kraj = validated_data.get('kraj', instance.kraj)
         instance.save()
         return instance
+
+class UserSerializer(serializers.ModelSerializer):
+    owners = serializers.PrimaryKeyRelatedField(many=True, queryset=User.objects.all())
+
+    class Meta:
+        model = User
+        fields = ['__all__']

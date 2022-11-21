@@ -1,5 +1,5 @@
 from django.contrib import admin
-
+from rest_framework.authtoken.admin import TokenAdmin
 # Register your models here.
 
 from .models import Osoba
@@ -16,3 +16,5 @@ class DruzynaAdmin(admin.ModelAdmin):
 
 # ten obiekt też trzeba zarejestrować w module admin
 admin.site.register(Druzyna, DruzynaAdmin)
+
+TokenAdmin.raw_id_fields = ['user']
