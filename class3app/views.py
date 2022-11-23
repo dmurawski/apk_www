@@ -1,13 +1,14 @@
+from django.contrib.auth.decorators import permission_required
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from django.core.exceptions import PermissionDenied
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from .models import Osoba, Druzyna
 from .serializers import DruzynaSerializer, OsobaSerializer
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([IsAuthenticated,IsAuthenticatedOrReadOnly])
 class osoba_list(APIView):
@@ -77,7 +78,6 @@ class osoba_delete(APIView):
         osoba.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
 @api_view(['GET', 'POST'])
 def druzyna_list(request):
     if request.method == 'GET':
@@ -123,3 +123,12 @@ def CustomAuthToken(request):
         'user': str(request.user),  # `django.contrib.auth.User` instance.
         'auth': str(request.auth),  #
         })
+
+def person_view(request, pk):
+    if not request.user.has_perm('class3app.view_osoba'):
+        raise PermissionDenied()
+    try:
+        osoba = Osoba.objects.get(pk=pk)
+        return HttpResponse(f"Ten użytkownik nazywa się {osoba.imie}")
+    except Osoba.DoesNotExist:
+        return HttpResponse(f"W bazie nie ma użytkownika o id={pk}.")

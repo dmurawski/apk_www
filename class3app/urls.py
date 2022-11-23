@@ -8,6 +8,7 @@ urlpatterns = [
     path('osoby/delete/<int:pk>/', views.osoba_delete.as_view()),
     path('druzyny/', views.druzyna_list),
     path('druzyny/<int:pk>/', views.druzyna_detail),
+    path('test/<int:pk>/', views.person_view),
 ]
 urlpatterns += [
     path('api-token-auth/', views.CustomAuthToken)

@@ -45,4 +45,6 @@ class Osoba(models.Model):
 
     class Meta:
         ordering = ["nazwisko"]
-
+        permissions = [
+            ("can_view_other_osoba", "Pozwala przypisać inną osobę do obiektu Person."),
+        ]
