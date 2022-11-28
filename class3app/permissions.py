@@ -1,4 +1,5 @@
 from rest_framework import permissions
+import copy
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -14,3 +15,10 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
 
         # Write permissions are only allowed to the owner of the snippet.
         return obj.owner == request.user
+
+
+class CustomDjangoModelPermission(permissions.DjangoModelPermissions):
+
+    def __init__(self):
+        self.perms_map = copy.deepcopy(self.perms_map)
+        self.perms_map['GET'] = ['%(app_label)s.view_%(model_name)s']

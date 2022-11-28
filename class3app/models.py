@@ -30,6 +30,7 @@ class Months(models.TextChoices):
     PAZDZIERNIK = 'X', _('Październik')
     LISTOPAD = 'XI', _('Listopad')
     GRUDZIEN = 'XII', _('Grudzień')
+
 class Osoba(models.Model):
     imie = models.CharField(max_length=60 ,blank=False)
     nazwisko = models.CharField(max_length=60, blank=False)
@@ -46,5 +47,5 @@ class Osoba(models.Model):
     class Meta:
         ordering = ["nazwisko"]
         permissions = [
-            ("can_view_other_osoba", "Pozwala przypisać inną osobę do obiektu Person."),
+            ("can_view_other_osobas", "pozwalaj wyświetlać obiekty modelu Osoba, których zalogowany użytkownik nie jest właścicielem."),
         ]

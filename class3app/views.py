@@ -9,6 +9,8 @@ from .models import Osoba, Druzyna
 from .serializers import DruzynaSerializer, OsobaSerializer
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+
+
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([IsAuthenticated,IsAuthenticatedOrReadOnly])
 class osoba_list(APIView):
