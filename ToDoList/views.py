@@ -1,6 +1,71 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from django.http import Http404, HttpResponse
+from .models import Task, List
+from .serializers import TaskSerializer
 
-# Create your views here.
-def index(request):
-    return HttpResponse("ToDoListApp in DJANGO")
+class task_list(APIView):
+    def get(self, request, format=None):
+        if request.query_params.get('title'):
+            tasks = Task.objects.filter(title=request.query_params.get('title'))
+        else:
+            tasks = Task.objects.all()
+        serializer = TaskSerializer(tasks, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = OsobaSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class task_detail(APIView):
+    def get_object(self,pk):
+        try:
+            return Task.objects.get(pk=pk)
+        except Task.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        task = self.get_object(pk)
+        serializer = TaskSerializer(task)
+        return Response(serializer.data)
+
+class task_put(APIView):
+    def get_object(self, pk):
+        try:
+            return Task.objects.get(pk=pk)
+        except Task.DoesNotExist:
+                raise Http404
+
+    def get(self, request, pk, format=None):
+        task = self.get_object(pk)
+        serializer = TaskSerializer(task)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        task = self.get_object(pk)
+        serializer = TaskSerializer(task, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class task_delete(APIView):
+    def get_object(self, pk):
+        try:
+            return Task.objects.get(pk=pk)
+        except Task.DoesNotExist:
+                raise Http404
+
+    def get(self, request, pk, format=None):
+        task = self.get_object(pk)
+        serializer = TaskSerializer(task)
+        return Response(serializer.data)
+
+    def delete(self, request, pk, format=None):
+        task = self.get_object(pk)
+        task.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
