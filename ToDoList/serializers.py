@@ -5,24 +5,23 @@ from .models import Task, List, Status, LabelsToDoList, TaskPriority
 import datetime
 
 def validate_deadline(value):
-    if not value > datetime.date.today():
-        raise serializers.ValidationError(
-            "Deadline nie może być w przeszłości",
-        )
+    if value == None:
+        raise serializers.ValidationError("Data Końca Zadania nie może być pusta")
     return value
+
 
 class TaskSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    author = serializers.ReadOnlyField(source='author.username')
-    title = serializers.CharField(required=False)
+    author = serializers.ReadOnlyField(source='author.username', read_only=True)
+    title = serializers.CharField(required=True, max_length = 200)
     description = serializers.CharField(required=False)
     complete_status = serializers.ChoiceField(choices=Status, default=Status.NOTSTARTED)
-    created = serializers.DateField()
-    deadline = serializers.DateTimeField()
+    created = serializers.DateField(read_only=True)
+    deadline = serializers.DateTimeField(validators=[validate_deadline], required = True)
     responsible = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     label = serializers.ChoiceField(choices=LabelsToDoList, default=LabelsToDoList.DEFAULT)
     priority = serializers.ChoiceField(choices=TaskPriority, default=TaskPriority.LEVEL5)
-    list = serializers.PrimaryKeyRelatedField(queryset=List.objects.all())
+    list = serializers.PrimaryKeyRelatedField(queryset=List.objects.all(), required=False, allow_null=True)
 
     def create(self, validated_data):
         return Task.objects.create(**validated_data)

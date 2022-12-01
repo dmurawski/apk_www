@@ -3,7 +3,7 @@ from .models import (Task,List)
 # Register your models here.
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('author', 'responsible','label', 'title', 'description', 'complete_status', 'created', 'deadline')
+    list_display = ('author', 'responsible','label', 'title', 'description', 'complete_status', 'created', 'deadline','list')
 admin.site.register(Task, TaskAdmin)
 
 
