@@ -58,7 +58,7 @@ class Task(models.Model):
         default=Status.NOTSTARTED,
     )
     created = models.DateField(auto_now = True)
-    deadline = models.DateTimeField(blank = False, null = False)
+    deadline = models.DateField(blank = False, null = False)
     responsible = models.ForeignKey('auth.User', related_name='author', null=False, on_delete=models.CASCADE)
     label = models.CharField(
         max_length=3,

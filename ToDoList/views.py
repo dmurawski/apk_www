@@ -10,19 +10,25 @@ from django.db.models import Q
 
 class task_list(APIView):
     name = 'Zadania'
-
     def get(self, request, format=None):
         if request.query_params.get('title'):
             tasks = Task.objects.filter(title__icontains=request.query_params.get('title'))
         else:
             tasks = Task.objects.all()
-        serializer = TaskSerializer(tasks, many=True)
+        if not self.request.user.is_superuser:
+            serializer = TaskSerializer(tasks.filter(responsible=request.user), many=True)
+            return Response(serializer.data)
+        else:
+            serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
 
+class task_post(APIView):
+    name = 'Dodaj zadanie'
     def post(self, request, format=None):
         serializer = TaskSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(author=self.request.user)
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
