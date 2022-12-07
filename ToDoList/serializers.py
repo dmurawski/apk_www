@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.authtoken.admin import User
 
-from .models import Task, List, Status, LabelsToDoList, TaskPriority
+from .models import Task, Status, LabelsToDoList, TaskPriority
 import datetime
 
 def validate_deadline(value):
@@ -21,7 +21,6 @@ class TaskSerializer(serializers.Serializer):
     responsible = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     label = serializers.ChoiceField(choices=LabelsToDoList, default=LabelsToDoList.DEFAULT)
     priority = serializers.ChoiceField(choices=TaskPriority, default=TaskPriority.LEVEL5)
-    list = serializers.PrimaryKeyRelatedField(queryset=List.objects.all(), required=False, allow_null=True)
 
     def create(self, validated_data):
         return Task.objects.create(**validated_data)
@@ -36,7 +35,6 @@ class TaskSerializer(serializers.Serializer):
         instance.responsible = validated_data.get('responsible', instance.responsible)
         instance.label = validated_data.get('label', instance.label)
         instance.priority = validated_data.get('priority', instance.priority)
-        instance.list = validated_data.get('list', instance.list)
         instance.save()
         return instance
 

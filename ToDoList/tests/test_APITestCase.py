@@ -10,7 +10,8 @@ def today():
     return datetime.date.today()
 def tomorrow():
     return datetime.date.today() + datetime.timedelta(days=1)
-class AccountTests(APITestCase):
+
+class TaskTest(APITestCase):
     def login(self):
         return self.client.login(username='myuser', password='mypassword')
     def setUpTestData():
@@ -30,14 +31,14 @@ class AccountTests(APITestCase):
         data = {'author': 'myuser',
                 'title': 'Title',
                 'description': 'Kowalski',
-                'complete_status': Status.NOTSTARTED,
+                'complete_status':" Status.NOTSTARTED",
                 'created': today(),
                 'deadline': tomorrow(),
-                'responsible':'myuser',
+                'responsible': User.objects.get(id=1).username,
                 'label': LabelsToDoList.DEFAULT,
                 'priority' : TaskPriority.LEVEL5 ,
-                'list': List.objects.get(id=1).id
                 }
+        print(data)
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Task.objects.count(), 1)
