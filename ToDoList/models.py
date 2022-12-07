@@ -16,12 +16,13 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 class List(models.Model):
     name = models.CharField(max_length=200)
     created = models.DateField(auto_now=True)
+    author = models.ForeignKey('auth.User', null=False, on_delete=models.CASCADE, blank=False)
 
     def __str__(self):
-        return  self.name
+        return  self.name + ' ' + self.author.username
 
     class Meta:
-        ordering = ['name']
+        ordering = ['created']
         verbose_name_plural = "Listy"
 
 class LabelsToDoList(models.TextChoices):

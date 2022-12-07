@@ -8,5 +8,5 @@ admin.site.register(Task, TaskAdmin)
 
 
 class ListAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created')
+    list_display = ('name', 'created', 'author')
 admin.site.register(List, ListAdmin)

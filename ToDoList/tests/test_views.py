@@ -19,6 +19,7 @@ class TaskListViewTest(TestCase):
                                       )
         List.objects.create(name='testdruzyna',
                             created=today(),
+                            author=User.objects.get(id=1),
                                )
         Task.objects.create(author= User.objects.get(id=1),
                             title= 'Title',

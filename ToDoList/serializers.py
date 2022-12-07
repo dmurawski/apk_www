@@ -47,3 +47,19 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['__all__']
+
+class ListSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    author = serializers.ReadOnlyField(source='author.username', read_only=True)
+    name = serializers.CharField(required=True, max_length = 200)
+    created = serializers.DateField(read_only=True)
+
+    def create(self, validated_data):
+        return List.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.author = validated_data.get('author', instance.author)
+        instance.name = validated_data.get('name', instance.name)
+        instance.created = validated_data.get('created', instance.created)
+        instance.save()
+        return instance

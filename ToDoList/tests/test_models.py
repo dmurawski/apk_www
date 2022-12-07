@@ -18,6 +18,7 @@ class TaskModelTest(TestCase):
                                       )
         List.objects.create(name='testdruzyna',
                             created=today(),
+                            author=User.objects.get(id=1),
                             )
         Task.objects.create(author=User.objects.get(id=1),
                             title='Title',
@@ -69,11 +70,18 @@ class TaskModelTest(TestCase):
 class ListModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
+        password = 'mypassword'
+        User.objects.create_superuser('myuser',
+                                      'myemail@test.com',
+                                      password
+                                      )
         List.objects.create(name='testdruzyna',
                             created=today(),
+                            author=User.objects.get(id=1),
                             )
         List.objects.create(name='testdruzyna2',
                             created=today(),
+                            author=User.objects.get(id=1),
                             )
     def test_name_label(self):
         list = List.objects.get(id=1)
