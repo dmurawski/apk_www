@@ -89,7 +89,7 @@ class task_list_complete(APIView):
     def get(self, request, format=None):
         tasks = Task.objects.filter(complete_status=Status.DONE)
         print(tasks)
-        serializer = TaskSerializer(tasks, many=True)
+        serializer = TaskSerializer(tasks.filter(responsible=request.user), many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class task_list_uncomplete(APIView):
@@ -97,5 +97,17 @@ class task_list_uncomplete(APIView):
     def get(self, request, format=None):
         tasks = Task.objects.filter(~Q(complete_status = Status.DONE))
         print(tasks)
-        serializer = TaskSerializer(tasks, many=True)
+        serializer = TaskSerializer(tasks.filter(responsible=request.user), many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class view_all_task_from_list(APIView):
+    name = 'Wyswietlenia zadań przypisanych do danej listy'
+
+    def get(self, request, format=None):
+        if request.query_params.get('list'):
+            tasks = Task.objects.filter(list__icontains=request.query_params.get('list'))
+        else:
+            tasks = Task.objects.all()
+        serializer = TaskSerializer(tasks.filter(responsible=request.user), many=True)
+        return Response(serializer.data)
