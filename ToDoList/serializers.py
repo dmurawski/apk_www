@@ -21,7 +21,7 @@ class TaskSerializer(serializers.Serializer):
     responsible = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     label = serializers.ChoiceField(choices=LabelsToDoList, default=LabelsToDoList.DEFAULT)
     priority = serializers.ChoiceField(choices=TaskPriority, default=TaskPriority.LEVEL5)
-    list = serializers.PrimaryKeyRelatedField(source='list.name', read_only=True)
+    list = serializers.PrimaryKeyRelatedField(queryset=List.objects.all())
 
     def create(self, validated_data):
         return Task.objects.create(**validated_data)
@@ -46,7 +46,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['__all__']
+        fields = ['id','authors']
 
 class ListSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)

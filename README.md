@@ -14,6 +14,10 @@ Projekt na zaliczenie
 - `127.0.0.1:8000/` - bazowy url
 - `127.0.0.1:8000/admin` - Panel Administracyjny 
 - `127.0.0.1:8000/todolist` - Url bazowy do aplikacji
+## Jak wpisawać parametr w url na przykładzie endpoint filtrujacym po opisie
+```bash
+  `todolist/task/desc?desc=loremipsum
+```
 ## Zadania
 - `todolist/task/` - wyświetlanie zadań
 - `todolist/task/title` - wyświetlanie zadań filtrowanie po tytule

@@ -2,17 +2,18 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.http import Http404, HttpResponse
-from .models import Task, List, Status
-from .serializers import TaskSerializer, ListSerializer
+from .models import Task, List, Status,User
+from .serializers import TaskSerializer, ListSerializer,UserSerializer
 from rest_framework.reverse import reverse
 from django.db.models import Q
 from rest_framework import status, permissions
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsResposibleReadOnlyTask
+from .permissions import IsResposibleReadOnlyTask,IsResposibleReadOnlyList
+from django.contrib.auth import get_user_model
 
-
+@permission_classes([IsAuthenticated, IsResposibleReadOnlyTask])
 class task_list(APIView):
     name = 'Zadania'
     def get(self, request, format=None):
@@ -24,6 +25,7 @@ class task_list(APIView):
             serializer = TaskSerializer(tasks, many=True)
             return Response(serializer.data)
 
+@permission_classes([IsAuthenticated, IsResposibleReadOnlyTask])
 class task_list_filter_title(APIView):
     name = 'Zadania filtrowane po tytule'
     def get(self, request, format=None):
@@ -39,7 +41,7 @@ class task_list_filter_title(APIView):
         return Response(serializer.data)
 
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated, IsResposibleReadOnlyTask])
+@permission_classes([IsAuthenticated])
 class task_post(APIView):
     name = 'Dodaj zadanie'
     def post(self, request, format=None):
@@ -66,7 +68,7 @@ class task_detail(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated, IsResposibleReadOnlyTask])
+@permission_classes([IsAuthenticated])
 class task_put(APIView):
     name = 'Edycja zadania'
     def get_object(self, pk):
@@ -89,7 +91,7 @@ class task_put(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated, IsResposibleReadOnlyTask])
+@permission_classes([IsAuthenticated])
 class task_delete(APIView):
     name = 'Usuń zadanie'
     def get_object(self, pk):
@@ -108,6 +110,7 @@ class task_delete(APIView):
         task.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+@permission_classes([IsAuthenticated, IsResposibleReadOnlyTask])
 class task_list_complete(APIView):
     name = 'Lista ukończonych zadań'
     def get(self, request, format=None):
@@ -116,6 +119,7 @@ class task_list_complete(APIView):
         serializer = TaskSerializer(tasks.filter(responsible=request.user), many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+@permission_classes([IsAuthenticated, IsResposibleReadOnlyTask])
 class task_list_uncomplete(APIView):
     name = 'Lista nieukończonych zadań'
     def get(self, request, format=None):
@@ -124,7 +128,7 @@ class task_list_uncomplete(APIView):
         serializer = TaskSerializer(tasks.filter(responsible=request.user), many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
+@permission_classes([IsAuthenticated, IsResposibleReadOnlyTask])
 class view_all_task_from_list(APIView):
     name = 'Wyswietlenia zadań przypisanych do danej listy'
 
@@ -140,6 +144,7 @@ class view_all_task_from_list(APIView):
             serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
 
+@permission_classes([IsAuthenticated, IsResposibleReadOnlyTask])
 class view_all_task_filter_desc(APIView):
     name = 'Wyswietlenia zadań zawierajace dana fraze w opisie'
 
@@ -155,7 +160,7 @@ class view_all_task_filter_desc(APIView):
             serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
 
-
+@permission_classes([IsAuthenticated, IsResposibleReadOnlyList])
 class list_view(APIView):
     name = 'Lista'
     def get(self, request, format=None):
@@ -167,6 +172,7 @@ class list_view(APIView):
             serializer = ListSerializer(lists, many=True)
         return Response(serializer.data)
 
+@permission_classes([IsAuthenticated, IsResposibleReadOnlyList])
 class list_view_filter_name(APIView):
     name = 'Listy filtrowane po nazwie'
     def get(self, request, format=None):
@@ -182,7 +188,7 @@ class list_view_filter_name(APIView):
         return Response(serializer.data)
 
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated, IsResposibleReadOnlyTask])
+@permission_classes([IsAuthenticated])
 class list_post(APIView):
     name = 'Dodaj liste'
     def post(self, request, format=None):
@@ -194,7 +200,7 @@ class list_post(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated, IsResposibleReadOnlyTask])
+@permission_classes([IsAuthenticated])
 class list_put(APIView):
     name = 'Edycja listy'
     def get_object(self, pk):
@@ -217,7 +223,7 @@ class list_put(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated, IsResposibleReadOnlyTask])
+@permission_classes([IsAuthenticated])
 class list_delete(APIView):
     name = 'Usuń liste'
     def get_object(self, pk):
@@ -236,6 +242,7 @@ class list_delete(APIView):
         list.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+@permission_classes([IsAuthenticated, IsResposibleReadOnlyList])
 class view_all_list_date(APIView):
     name = 'Wyswietlenia list po nazwie'
 

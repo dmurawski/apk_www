@@ -69,7 +69,7 @@ class Task(models.Model):
     priority = models.IntegerField(
         choices=TaskPriority.choices,
         default=TaskPriority.LEVEL5)
-    list = models.ForeignKey(List, null=False, on_delete=models.CASCADE, blank=False)
+    list = models.ForeignKey(List, null=True, on_delete=models.CASCADE, blank=True)
 
     def __str__(self):
         return  self.responsible.username+' '+self.title
